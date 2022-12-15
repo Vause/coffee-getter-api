@@ -1,7 +1,7 @@
-import { handler } from "./handler.js";
+import handler from './handler.js';
 
 export const coffeesGetRoute = {
-    method: 'GET',
-    path: '/coffees',
-    handler
-}
+  method: 'GET',
+  path: '/coffees',
+  handler,
+};

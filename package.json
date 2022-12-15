@@ -2,7 +2,7 @@
   "name": "coffee-getter-api",
   "version": "1.0.0",
   "description": "API for getting coffee imformation",
-  "main": "./src/index.js",
+  "exports": "./src/index.js",
   "type": "module",
   "scripts": {
     "start": "node src/index.js"
@@ -14,5 +14,10 @@
     "@hapi/hapi": "21.1.0",
     "fast-xml-parser": "4.0.12",
     "got": "12.5.3"
+  },
+  "devDependencies": {
+    "eslint": "8.29.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.26.0"
   }
 }

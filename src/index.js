@@ -1,5 +1,5 @@
-import { start } from './server.js';
+import start from './server.js';
 
 (async () => {
-    await start();
+  await start();
 })();
