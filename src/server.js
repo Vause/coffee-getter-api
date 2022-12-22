@@ -1,4 +1,5 @@
 import { server as hapiServer } from '@hapi/hapi';
+import { info } from './logger.js';
 import { coffeesGetRoute } from './route.js';
 
 export default async function start() {
@@ -13,5 +14,5 @@ export default async function start() {
   server.route(coffeesGetRoute);
 
   await server.start();
-  console.log('Server running on %s', server.info.uri);
+  info('Server running on %s', server.info.uri);
 }

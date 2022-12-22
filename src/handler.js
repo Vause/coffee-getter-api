@@ -2,6 +2,7 @@ import { url } from './config.js';
 import getSitemap from './caller.js';
 import xmlToJson from './parser.js';
 import { nonCoffeeStrings } from './constants.js';
+import { error } from './logger.js';
 
 const getProductInfo = (element) => ({
   imageInfo: element['image:image'],
@@ -26,11 +27,16 @@ const filterOutNonCoffees = (data) => {
 };
 
 export default async function handler() {
-  const sitemapData = await getSitemap(url);
-  const parsedJson = xmlToJson(sitemapData);
-  const productInfo = getActiveProductInfo(parsedJson);
+  try {
+    const sitemapData = await getSitemap(url);
+    const parsedJson = xmlToJson(sitemapData);
+    const productInfo = getActiveProductInfo(parsedJson);
 
-  const structuredProductInfo = productInfo.map((e) => getStructuredProductData(e));
+    const structuredProductInfo = productInfo.map((e) => getStructuredProductData(e));
 
-  return filterOutNonCoffees(structuredProductInfo);
+    return filterOutNonCoffees(structuredProductInfo);
+  } catch (e) {
+    error(e);
+    throw new Error(`Error getting coffee data ${e}`);
+  }
 }
