@@ -8,6 +8,8 @@ const getProductInfo = (element) => ({
   siteLocation: element.loc,
 });
 
+const getActiveProductInfo = (jsonSitemap) => jsonSitemap.urlset.url.map((e) => getProductInfo(e)).filter((x) => x.imageInfo);
+
 const getStructuredProductData = (element) => ({
   location: element.siteLocation,
   description: element.imageInfo['image:title'],
@@ -24,13 +26,11 @@ const filterOutNonCoffees = (data) => {
 };
 
 export default async function handler() {
-  const siteMapData = await getSitemap(url);
-  const parsedJson = xmlToJson(siteMapData);
-  const productInfo = parsedJson.urlset.url.map((e) => getProductInfo(e));
+  const sitemapData = await getSitemap(url);
+  const parsedJson = xmlToJson(sitemapData);
+  const productInfo = getActiveProductInfo(parsedJson);
 
-  const filteredProductInfo = productInfo.filter((x) => x.imageInfo);
-
-  const structuredProductInfo = filteredProductInfo.map((e) => getStructuredProductData(e));
+  const structuredProductInfo = productInfo.map((e) => getStructuredProductData(e));
 
   return filterOutNonCoffees(structuredProductInfo);
 }
