@@ -1,6 +1,6 @@
 import { url } from './config.js';
 import getSitemap from './caller.js';
-import parser from './parser.js';
+import xmlToJson from './parser.js';
 import { nonCoffeeStrings } from './constants.js';
 
 const getProductInfo = (element) => ({
@@ -14,14 +14,23 @@ const getStructuredProductData = (element) => ({
   image: element.imageInfo['image:loc'],
 });
 
-const filterOutNonCoffees = (data) => nonCoffeeStrings.map((s) => data.filter((a) => a.description.toUpperCase().indexOf(s.toUpperCase()) === -1));
+const filterOutNonCoffees = (data) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const s of nonCoffeeStrings) {
+    // eslint-disable-next-line no-param-reassign
+    data = data.filter((a) => a.description.toUpperCase().indexOf(s.toUpperCase()) === -1);
+  }
+  return data;
+};
 
 export default async function handler() {
   const siteMapData = await getSitemap(url);
-  const parsedJson = parser.xmlToJson(siteMapData);
+  const parsedJson = xmlToJson(siteMapData);
   const productInfo = parsedJson.urlset.url.map((e) => getProductInfo(e));
 
   const filteredProductInfo = productInfo.filter((x) => x.imageInfo);
 
-  return filterOutNonCoffees(filteredProductInfo.map((e) => getStructuredProductData(e)));
+  const structuredProductInfo = filteredProductInfo.map((e) => getStructuredProductData(e));
+
+  return filterOutNonCoffees(structuredProductInfo);
 }
